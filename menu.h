@@ -19,10 +19,49 @@ extern "C" {
 }
 #endif
 
+void liberarAcesso(){
+        
+        Inicializa_LCD();
+        Posiciona_LCD(1,1);
+        Escreve_LCD("Verificando...");
+        Delay10KTCYx(100);
+        Inicializa_LCD();
+        Posiciona_LCD(1,1);               // Posiciona cursor na linha 1 e coluna 1
+        Escreve_LCD("Senha Correta!!!");
+        Posiciona_LCD(2,1);
+        Delay1KTCYx (255);
+        Escreve_LCD("Acesso Liberado");
+        PORTCbits.RC0 = 0;
+        PORTCbits.RC1 = 1;
+        Delay10KTCYx (255);
+    
+    
+    
+}
+
+void negarAcesso(){
+    
+        Inicializa_LCD();
+        Posiciona_LCD(1,1);
+        Escreve_LCD("Senha Incorreta!!!");
+        
+        PORTCbits.RC0 = 0;
+        Delay1KTCYx (100);
+        PORTCbits.RC0 = 1;
+        Delay1KTCYx (100);
+        PORTCbits.RC0 = 0;
+        Delay1KTCYx (100);
+        PORTCbits.RC0 = 1;
+        Delay10KTCYx (50);
+    
+}
+
+
 void menuRoot(){
+    
     //entrar aqui apenas depois de verificar senha root
     
-    
+    char vet[6];
     char saiLoop = 't';
     do{
         Inicializa_LCD();
@@ -32,11 +71,16 @@ void menuRoot(){
         Escreve_LCD("2-cadastrar user");
         switch (Digito()) {
         case '1':
-           //chamar função para abir
+            pedeSenha(vet);
+            if(verificaSenha(vet, '1') == 1){
+                liberarAcesso();
+            }else{
+                negarAcesso();
+            }
             saiLoop = 'g';
            break;
         case '2':
-            // criar funçao para cadastrar
+            cadastrarUsuario();
             saiLoop = 'g';
             break;
         case '3':
@@ -92,7 +136,11 @@ void iniciar(){
                 case '5':
                 case '6':
                 case '7':
-                    pedeSenha(user);
+                    if(pedeSenhaUserNormal(user) == 1){  //arrumar
+                        liberarAcesso();
+                    }else{
+                        negarAcesso();
+                    }
                     saiLoop = 'f';
                     break;
                 default:
@@ -113,6 +161,8 @@ void iniciar(){
         
     }
 }
+
+
 
 
 #endif	/* MENU_H */

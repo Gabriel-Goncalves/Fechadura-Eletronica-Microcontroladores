@@ -154,7 +154,8 @@ int verificaSenhaMemoria(char vet[], unsigned char a){  // de acordo com o user
         return 0;
     }
 }
-void verificaSenha(char vet[], char a){
+
+int verificaSenha(char vet[], char a){
     int resultado = 0;
     switch (a) {
                 case '1':
@@ -179,36 +180,7 @@ void verificaSenha(char vet[], char a){
                     resultado = verificaSenhaMemoria(vet, 0x24);
                     break;
             }
-    if(resultado == 1){
-        Inicializa_LCD();
-        Posiciona_LCD(1,1);
-        Escreve_LCD("Verificando...");
-        Delay10KTCYx(100);
-        Inicializa_LCD();
-        Posiciona_LCD(1,1);               // Posiciona cursor na linha 1 e coluna 1
-        Escreve_LCD("Senha Correta!!!");
-        Posiciona_LCD(2,1);
-        Delay1KTCYx (255);
-        Escreve_LCD("Acesso Liberado");
-        PORTCbits.RC0 = 0;
-        PORTCbits.RC1 = 1;
-        Delay10KTCYx (255);
-    }
-    else{
-        Inicializa_LCD();
-        Posiciona_LCD(1,1);
-        Escreve_LCD("Senha Incorreta!!!");
-        
-        PORTCbits.RC0 = 0;
-        Delay1KTCYx (100);
-        PORTCbits.RC0 = 1;
-        Delay1KTCYx (100);
-        PORTCbits.RC0 = 0;
-        Delay1KTCYx (100);
-        PORTCbits.RC0 = 1;
-        Delay10KTCYx (50);
-    }
-    
+    return resultado;
     
     
     /*
@@ -244,7 +216,21 @@ void verificaSenha(char vet[], char a){
 }
 
 
-void pedeSenha(char user){
+void pedeSenha(char vet[]){
+    int result = 0;
+    
+    
+    while(1){
+        vet[6];
+        result = confereDigito(vet);
+        if(result == 1){
+            break;
+        }
+    }
+     
+}
+
+int pedeSenhaUserNormal(char user){
     int result = 0;
     char vet[6];
     
@@ -255,7 +241,8 @@ void pedeSenha(char user){
             break;
         }
     }
-    verificaSenha(vet, user);
+     
+    return verificaSenha(vet, user);
 }
 
 
@@ -328,11 +315,94 @@ void trocarSenhaRoot(){   // para a primeira vez que ligar o pic
     Write_eep( 0x04, vet[4] );
     Write_eep( 0x05, vet[5] );
     Write_eep( 0xFF, '1' );
+    Write_eep( 0xFE, '1' );
     Inicializa_LCD();
     Posiciona_LCD(1,1);
     Escreve_LCD("Senha salva com");
     Posiciona_LCD(2,1);
     Escreve_LCD("sucesso!");
+    Delay10KTCYx (50);
+}
+
+void cadastraSenha(char senha[]){
+    int result = 0;
+    char vet[6];
+    
+    while(1){
+        vet[6];
+        result = confereDigito(vet);
+        if(result == 1){
+            break;
+        }
+    }
+     
+    senha[0] = vet[0];
+    senha[1] = vet[1];
+    senha[2] = vet[2];
+    senha[3] = vet[3];
+    senha[4] = vet[4];
+    senha[5] = vet[5];
+}
+
+void cadastraUsuarioMemoria(unsigned char a){
+    unsigned char inicio;
+    int i = 0;
+    char vet[];
+    Inicializa_LCD();
+    Posiciona_LCD(1,1);
+    Escreve_LCD("Cadastro do user");
+    Posiciona_LCD(2,1);
+    Escreve_C_LCD(Read_eep(0xFE));
+    Delay10KTCYx (100);
+    
+    Inicializa_LCD();
+    Posiciona_LCD(1,1);
+    Escreve_LCD("Cadastro senha");
+    Delay10KTCYx (100);
+    
+    cadastraSenha(vet);
+    
+    for(inicio = a; inicio < a+6; inicio++, i++){
+        Write_eep(inicio , vet[0] );
+    }
+    
+}
+
+void cadastrarUsuario(){
+    switch (Read_eep(0xFE)){
+        case '1':
+            cadastraUsuarioMemoria(0x06);
+            Write_eep( 0xFE, '2' );  // atualiza a quantidade de usuarios
+            break;
+        case '2':
+            cadastraUsuarioMemoria(0x0C);
+            Write_eep( 0xFE, '3' );
+            break;
+        case '3':
+            cadastraUsuarioMemoria(0x12);
+            Write_eep( 0xFE, '4' );
+            break;
+        case '4':
+            cadastraUsuarioMemoria(0x18);
+            Write_eep( 0xFE, '5' );
+            break;
+        case '5':
+            cadastraUsuarioMemoria(0x1E);
+            Write_eep( 0xFE, '6' );
+            break;
+        case '6':
+            cadastraUsuarioMemoria(0x24);
+            Write_eep( 0xFE, '7' );
+            break;
+        case '7':
+            Inicializa_LCD();
+            Posiciona_LCD(1,1);
+            Escreve_LCD("numero maximo de");
+            Posiciona_LCD(2,1);
+            Escreve_LCD("users atingido");
+            Delay10KTCYx (100);
+            break;
+    }
 }
 
 #endif	/* SENHA_H */
