@@ -21,9 +21,10 @@ extern "C" {
 
 void menuRoot(){
     //entrar aqui apenas depois de verificar senha root
+    
+    
     char saiLoop = 't';
     do{
-        
         Inicializa_LCD();
         Posiciona_LCD(1,1);               //Posiciona cursor na linha 1 e coluna 1
         Escreve_LCD("1-abrir 3-reset");
@@ -82,24 +83,16 @@ void iniciar(){
             Delay10KTCYx(10);
             switch (user) {
                 case '1':
+                   menuRoot();
                    saiLoop = 'f';
                    break;
                 case '2':
-                    saiLoop = 'f';
-                    break;
                 case '3':
-                    saiLoop = 'f';
-                    break;
                 case '4':
-                    saiLoop = 'f';
-                    break;
                 case '5':
-                    saiLoop = 'f';
-                    break;
                 case '6':
-                    saiLoop = 'f';
-                    break;
                 case '7':
+                    pedeSenha(user);
                     saiLoop = 'f';
                     break;
                 default:
@@ -111,6 +104,10 @@ void iniciar(){
                    Delay10KTCYx(150);
             }
         }while(saiLoop == 't');
+        
+        
+        
+        
         //com o valor de user pedir e comparar a senha com a posicao de memoria
         // de cada um de acordo com o user escolhido
         

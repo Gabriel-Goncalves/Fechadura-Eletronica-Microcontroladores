@@ -138,22 +138,48 @@ int confereDigito(char vet[]){
     return 1;
 }
 
-
-int pedeSenha(char vet[]){
-    int result = 0;
-    
-    while(1){
-        vet[6];
-        result = confereDigito(vet);
-        if(result == 1){
-            break;
+int verificaSenhaMemoria(char vet[], unsigned char a){  // de acordo com o user
+    // selecionado verifica na posicao de memoria correspondente
+    unsigned char inicio;
+    int i = 0, verifica = 0;
+    for(inicio = a; inicio < a+6; inicio++, i++){
+        if(Read_eep(inicio) == vet[i]){
+            verifica++;
         }
     }
+    if(verifica == 6){
+        return 1;
+    }
+    else{
+        return 0;
+    }
 }
-
-void verificaSenha(char vet[]){
-    
-    if(vet[0] == '1' && vet[1] == '2' && vet[2] == '3' && vet[3] == '4' && vet[4] == '5' && vet[5] == '6' ){
+void verificaSenha(char vet[], char a){
+    int resultado = 0;
+    switch (a) {
+                case '1':
+                   resultado = verificaSenhaMemoria(vet, 0x00);
+                   break;
+                case '2':
+                    resultado = verificaSenhaMemoria(vet, 0x06);
+                    break;
+                case '3':
+                    resultado = verificaSenhaMemoria(vet, 0x0C);
+                    break;
+                case '4':
+                    resultado = verificaSenhaMemoria(vet, 0x12);
+                    break;
+                case '5':
+                    resultado = verificaSenhaMemoria(vet, 0x18);
+                    break;
+                case '6':
+                    resultado = verificaSenhaMemoria(vet, 0x1E);
+                    break;
+                case '7':
+                    resultado = verificaSenhaMemoria(vet, 0x24);
+                    break;
+            }
+    if(resultado == 1){
         Inicializa_LCD();
         Posiciona_LCD(1,1);
         Escreve_LCD("Verificando...");
@@ -183,10 +209,54 @@ void verificaSenha(char vet[]){
         Delay10KTCYx (50);
     }
     
+    
+    
+    /*
+    if(vet[0] == '1' && vet[1] == '2' && vet[2] == '3' && vet[3] == '4' && vet[4] == '5' && vet[5] == '6' ){
+        Inicializa_LCD();
+        Posiciona_LCD(1,1);
+        Escreve_LCD("Verificando...");
+        Delay10KTCYx(100);
+        Inicializa_LCD();
+        Posiciona_LCD(1,1);               // Posiciona cursor na linha 1 e coluna 1
+        Escreve_LCD("Senha Correta!!!");
+        Posiciona_LCD(2,1);
+        Delay1KTCYx (255);
+        Escreve_LCD("Acesso Liberado");
+        PORTCbits.RC0 = 0;
+        PORTCbits.RC1 = 1;
+        Delay10KTCYx (255);
+    }
+    else{
+        Inicializa_LCD();
+        Posiciona_LCD(1,1);
+        Escreve_LCD("Senha Incorreta!!!");    
+        PORTCbits.RC0 = 0;
+        Delay1KTCYx (100);
+        PORTCbits.RC0 = 1;
+        Delay1KTCYx (100);
+        PORTCbits.RC0 = 0;
+        Delay1KTCYx (100);
+        PORTCbits.RC0 = 1;
+        Delay10KTCYx (50);
+    }
+    */
 }
 
 
-
+void pedeSenha(char user){
+    int result = 0;
+    char vet[6];
+    
+    while(1){
+        vet[6];
+        result = confereDigito(vet);
+        if(result == 1){
+            break;
+        }
+    }
+    verificaSenha(vet, user);
+}
 
 
 int confirmaReiniciar(){
