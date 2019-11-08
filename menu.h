@@ -19,6 +19,15 @@ extern "C" {
 }
 #endif
 
+void menuRoot(){
+    Inicializa_LCD();
+    Posiciona_LCD(1,1);               //Posiciona cursor na linha 1 e coluna 1
+    Escreve_LCD("1-abrir 3-reset");
+    Posiciona_LCD(2,1);
+    Escreve_LCD("3-cadastrar user");
+    Delay10KTCYx(100);
+}
+
 void iniciar(){
     
     if(verificaEEPROM() == 1){
@@ -36,7 +45,11 @@ void iniciar(){
         Posiciona_LCD(1,1);               //Posiciona cursor na linha 1 e coluna 1
         Escreve_LCD("Segundo acesso");
         Delay10KTCYx(100);
+        menuRoot();
+        
     }
 }
+
+
 #endif	/* MENU_H */
 

@@ -44,10 +44,6 @@ void Write_eep( unsigned char badd,unsigned char bdat ){ // passa a (pos,valor)
     EECON1bits.WREN = 0;
 }
 
-
-
- 
-
 int verificaEEPROM(){  // verificação se é o primeiro acesso
     if(Read_eep(0xFF) == '9'){ 
         return 1;  // Nunca foi acessado
