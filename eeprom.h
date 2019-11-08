@@ -83,6 +83,9 @@ void reiniciarPadrao(){ // tudo FF como se fosse um pic novo
     }
 }
 
-
+int verificaUsuario(char vet[]){
+    // implementar cadastro de cada usuario/
+    // verificar se nao atingiu o numero maximo de usuarios
+}
 #endif	/* EEPROM_H */
 

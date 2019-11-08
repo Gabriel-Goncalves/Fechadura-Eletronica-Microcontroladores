@@ -20,16 +20,46 @@ extern "C" {
 #endif
 
 void menuRoot(){
-    Inicializa_LCD();
-    Posiciona_LCD(1,1);               //Posiciona cursor na linha 1 e coluna 1
-    Escreve_LCD("1-abrir 3-reset");
-    Posiciona_LCD(2,1);
-    Escreve_LCD("3-cadastrar user");
+    //entrar aqui apenas depois de verificar senha root
+    char saiLoop = 't';
+    do{
+        
+        Inicializa_LCD();
+        Posiciona_LCD(1,1);               //Posiciona cursor na linha 1 e coluna 1
+        Escreve_LCD("1-abrir 3-reset");
+        Posiciona_LCD(2,1);
+        Escreve_LCD("2-cadastrar user");
+        switch (Digito()) {
+        case '1':
+           //chamar função para abir
+            saiLoop = 'g';
+           break;
+        case '2':
+            // criar funçao para cadastrar
+            saiLoop = 'g';
+            break;
+        case '3':
+            reiniciarConfiguracaoInicial();
+            saiLoop = 'g';
+            break;
+        default:
+           Inicializa_LCD();
+           Posiciona_LCD(1,1);               //Posiciona cursor na linha 1 e coluna 1
+           Escreve_LCD("Opcao invalida");
+           Posiciona_LCD(2,1);
+           Escreve_LCD("Digite novamente");
+           Delay10KTCYx(150);
+        }
+    }while(saiLoop == 't');
+ 
     Delay10KTCYx(100);
+    
+    // criar as funçoes para abri e cadastrar
 }
 
+
 void iniciar(){
-    
+    char saiLoop = 't';
     if(verificaEEPROM() == 1){
         // Menu para primeiro acesso
         Inicializa_LCD();
@@ -41,11 +71,48 @@ void iniciar(){
         trocarSenhaRoot();
     }else{
         //segundo acesso em diante
-        Inicializa_LCD();
-        Posiciona_LCD(1,1);               //Posiciona cursor na linha 1 e coluna 1
-        Escreve_LCD("Segundo acesso");
-        Delay10KTCYx(100);
-        menuRoot();
+        do{
+            char user;
+            Inicializa_LCD();
+            Posiciona_LCD(1,1);               //Posiciona cursor na linha 1 e coluna 1
+            Escreve_LCD("Selecione o User");
+            Posiciona_LCD(2,1);
+            Escreve_LCD("1-2-3-4-5-6-7");
+            user = Digito();
+            Delay10KTCYx(10);
+            switch (user) {
+                case '1':
+                   saiLoop = 'f';
+                   break;
+                case '2':
+                    saiLoop = 'f';
+                    break;
+                case '3':
+                    saiLoop = 'f';
+                    break;
+                case '4':
+                    saiLoop = 'f';
+                    break;
+                case '5':
+                    saiLoop = 'f';
+                    break;
+                case '6':
+                    saiLoop = 'f';
+                    break;
+                case '7':
+                    saiLoop = 'f';
+                    break;
+                default:
+                   Inicializa_LCD();
+                   Posiciona_LCD(1,1);               //Posiciona cursor na linha 1 e coluna 1
+                   Escreve_LCD("Opcao invalida");
+                   Posiciona_LCD(2,1);
+                   Escreve_LCD("Digite novamente");
+                   Delay10KTCYx(150);
+            }
+        }while(saiLoop == 't');
+        //com o valor de user pedir e comparar a senha com a posicao de memoria
+        // de cada um de acordo com o user escolhido
         
     }
 }
