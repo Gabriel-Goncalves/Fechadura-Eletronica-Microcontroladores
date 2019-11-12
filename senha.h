@@ -292,7 +292,8 @@ void trocarSenhaRoot(){   // para a primeira vez que ligar o pic
         pedeSenha(vet);
         Inicializa_LCD();
         Posiciona_LCD(1,1);
-        Escreve_LCD("Digite novamente");
+        Escreve_LCD("Digite novamente"); 
+        Delay10KTCYx (80);
         pedeSenha(vet2);
         if(vet[0] == vet2[0] && vet[1] == vet2[1] && vet[2] == vet2[2]){
             if(vet[3] == vet2[3] && vet[4] == vet2[4] && vet[5] == vet2[5]){
