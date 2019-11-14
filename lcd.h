@@ -17,12 +17,13 @@
 #define EN_LCD PORTEbits.RE1
 #define DATA_LCD PORTD
 
+/*
 #pragma config FOSC = HS
 #pragma config PWRT = ON
 #pragma config PBADEN = OFF
 #pragma config WDT = OFF
 #pragma config LVP = OFF
-
+*/
 // ================================================================= //
 // SUB-ROTINA DE CONTROLE DE LCD                                     //
 // ================================================================= //

@@ -4,6 +4,7 @@
 #include "senha.h"
 #include "eeprom.h"
 #include "menu.h"
+#include "MCC18_18F4550.h"
 
 void main (void){
    

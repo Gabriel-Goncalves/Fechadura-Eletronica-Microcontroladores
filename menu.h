@@ -31,8 +31,10 @@ void liberarAcesso(){
         Posiciona_LCD(2,1);
         Delay1KTCYx (255);
         Escreve_LCD("Acesso Liberado");
-        PORTCbits.RC0 = 0;
-        PORTCbits.RC1 = 1;
+        
+        PORTCbits.RC1 = 1;    //corrigir para acinar o relé
+        Delay10KTCYx(100);
+        PORTCbits.RC1 = 0;
         Delay10KTCYx (255);
     
     
@@ -45,7 +47,7 @@ void negarAcesso(){
         Posiciona_LCD(1,1);
         Escreve_LCD("Senha Incorreta!!!");
         
-        PORTCbits.RC0 = 0;
+        PORTCbits.RC0 = 0; //mudar para acinar o buzer
         Delay1KTCYx (100);
         PORTCbits.RC0 = 1;
         Delay1KTCYx (100);
@@ -80,10 +82,16 @@ void menuRoot(){
             saiLoop = 'g';
            break;
         case '2':
-            cadastrarUsuario();
+            pedeSenha(vet);
+            if(verificaSenha(vet, '1') == 1){
+                cadastrarUsuario();;
+            }else{
+                negarAcesso();
+            }
             saiLoop = 'g';
             break;
         case '3':
+            //arrumar para pedir senha para reiniciar
             reiniciarConfiguracaoInicial();
             saiLoop = 'g';
             break;
@@ -93,7 +101,7 @@ void menuRoot(){
            Escreve_LCD("Opcao invalida");
            Posiciona_LCD(2,1);
            Escreve_LCD("Digite novamente");
-           Delay10KTCYx(150);
+           Delay10KTCYx(170);
         }
     }while(saiLoop == 't');
  

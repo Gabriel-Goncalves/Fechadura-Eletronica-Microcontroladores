@@ -26,31 +26,30 @@ char Digito()
  {
     
     while(1){
-     Delay1KTCYx (220);
-     PORTBbits.RB0 = 1; PORTBbits.RB1 = 0; PORTBbits.RB2 = 0; PORTBbits.RB3 = 0;
-     if(PORTBbits.RB4 == 1) { return  '1';}
-     else if(PORTBbits.RB5 == 1) { return '2';}
-     else if(PORTBbits.RB6 == 1) { return  '3';};
+        Delay1KTCYx (220);
+         
+     PORTBbits.RB0 = 0; PORTBbits.RB1 = 1; PORTBbits.RB2 = 1; PORTBbits.RB3 = 1;
+     if(PORTBbits.RB4 == 0) { return  '1';}
+     else if(PORTBbits.RB5 == 0) { return '2';}
+     else if(PORTBbits.RB6 == 0) { return  '3';};
      Delay1KTCYx (1);
      
-     PORTBbits.RB0 = 0; PORTBbits.RB1 = 1; PORTBbits.RB2 = 0; PORTBbits.RB3 = 0;
-     if(PORTBbits.RB4 == 1) { return  '4';}
-     else if(PORTBbits.RB5 == 1) { return '5';}
-     else if(PORTBbits.RB6 == 1) { return  '6';};
+     PORTBbits.RB0 = 1; PORTBbits.RB1 = 0; PORTBbits.RB2 = 1; PORTBbits.RB3 = 1;
+     if(PORTBbits.RB4 == 0) { return  '4';}
+     else if(PORTBbits.RB5 == 0) { return '5';}
+     else if(PORTBbits.RB6 == 0) { return '6';};
      Delay1KTCYx (1);
      
-     
-     PORTBbits.RB0 = 0; PORTBbits.RB1 = 0; PORTBbits.RB2 = 1; PORTBbits.RB3 = 0;
-     if(PORTBbits.RB4 == 1) { return  '7';}
-     else if(PORTBbits.RB5 == 1) { return '8';}
-     else if(PORTBbits.RB6 == 1) { return  '9';};
+     PORTBbits.RB0 = 1; PORTBbits.RB1 = 1; PORTBbits.RB2 = 0; PORTBbits.RB3 = 1;
+     if(PORTBbits.RB4 == 0) { return '7';}
+     else if(PORTBbits.RB5 == 0) { return '8';}
+     else if(PORTBbits.RB6 == 0) { return '9';};
      Delay1KTCYx (1);
      
-     
-     PORTBbits.RB0 = 0; PORTBbits.RB1 = 0; PORTBbits.RB2 = 0; PORTBbits.RB3 = 1;
-     if(PORTBbits.RB4 == 1) {return '*';}
-     else if(PORTBbits.RB5 == 1) { return '0';}
-     else if(PORTBbits.RB6 == 1) { return  '#';};
+     PORTBbits.RB0 = 1; PORTBbits.RB1 = 1; PORTBbits.RB2 = 1; PORTBbits.RB3 = 0;
+     if(PORTBbits.RB4 == 0) { return '*';}
+     else if(PORTBbits.RB5 == 0) { return '0';}
+     else if(PORTBbits.RB6 == 0) { return '#';};
      Delay1KTCYx (1);
      
      /*
@@ -86,6 +85,7 @@ char Digito()
     }
      
  }
+
 int confereDigito(char vet[]){
     
     Inicializa_LCD();
@@ -253,7 +253,7 @@ int confirmaReiniciar(){
     Escreve_LCD("Tem certeza que");
     Posiciona_LCD(2,1);
     Escreve_LCD("deseja reiniciar");
-    Delay10KTCYx (50);
+    Delay10KTCYx (100);
     
     do{
         Inicializa_LCD();
@@ -270,7 +270,7 @@ int confirmaReiniciar(){
             return 2;
         }
         else{ 
-            Escreve_LCD("Opção incorreta");
+            Escreve_LCD("Opcao incorreta");
         }
     }while(1);
      
@@ -302,10 +302,10 @@ void trocarSenhaRoot(){   // para a primeira vez que ligar o pic
         }else{
             Inicializa_LCD();
             Posiciona_LCD(1,1);
-            Escreve_LCD("Senhas não");
+            Escreve_LCD("Senhas nao");
             Posiciona_LCD(2,1);
             Escreve_LCD("correspondem!");
-            Delay10KTCYx (50);
+            Delay10KTCYx (100);
         }
     }
     // grava a senha que foi digitada pro root   
@@ -322,7 +322,7 @@ void trocarSenhaRoot(){   // para a primeira vez que ligar o pic
     Escreve_LCD("Senha salva com");
     Posiciona_LCD(2,1);
     Escreve_LCD("sucesso!");
-    Delay10KTCYx (50);
+    Delay10KTCYx (80);
 }
 
 void cadastraSenha(char senha[]){
