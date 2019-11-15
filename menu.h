@@ -32,12 +32,14 @@ void liberarAcesso(){
         Delay1KTCYx (255);
         Escreve_LCD("Acesso Liberado");
         
-        PORTCbits.RC1 = 1;    //corrigir para acinar o relé
-        Delay10KTCYx(100);
-        PORTCbits.RC1 = 0;
+        PORTAbits.RA3 = 1;    
+        Delay10KTCYx(255);
+        Delay10KTCYx(255);
+        PORTAbits.RA3 = 0;
+         
         Delay10KTCYx (255);
-    
-    
+        
+        
     
 }
 
@@ -47,14 +49,14 @@ void negarAcesso(){
         Posiciona_LCD(1,1);
         Escreve_LCD("Senha Incorreta!!!");
         
-        PORTCbits.RC0 = 0; //mudar para acinar o buzer
-        Delay1KTCYx (100);
-        PORTCbits.RC0 = 1;
-        Delay1KTCYx (100);
-        PORTCbits.RC0 = 0;
-        Delay1KTCYx (100);
-        PORTCbits.RC0 = 1;
-        Delay10KTCYx (50);
+        PORTCbits.RC1 = 1;    
+        Delay10KTCYx(100);
+        PORTCbits.RC1 = 0; 
+        Delay10KTCYx (100);
+        PORTCbits.RC1 = 1;    
+        Delay10KTCYx(150);
+        PORTCbits.RC1 = 0; 
+        Delay10KTCYx (255);
     
 }
 
