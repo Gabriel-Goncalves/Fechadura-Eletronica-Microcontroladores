@@ -117,13 +117,37 @@ void iniciar(){
     char saiLoop = 't';
     if(verificaEEPROM() == 1){
         // Menu para primeiro acesso
+        char vet[6];
         Inicializa_LCD();
         Posiciona_LCD(1,1);               //Posiciona cursor na linha 1 e coluna 1
         Escreve_LCD("BEM VINDO!!!");
         Posiciona_LCD(2,1);  
         Escreve_LCD("Primeiro acesso");
-        Delay10KTCYx (50);
-        trocarSenhaRoot();
+        Delay10KTCYx (200);
+        Delay10KTCYx (90);
+        
+        Inicializa_LCD();
+        Posiciona_LCD(1,1);               //Posiciona cursor na linha 1 e coluna 1
+        Escreve_LCD("Digite a senha");
+        Posiciona_LCD(2,1);  
+        Escreve_LCD("Padrao");
+        Delay10KTCYx (180);
+        Delay10KTCYx (100);
+        
+        pedeSenha(vet);
+        if(verificaSenhaPadrao(vet)){
+            Inicializa_LCD();
+            Escreve_LCD("Senha correta!!!");
+            Posiciona_LCD(2,1);  
+            Escreve_LCD("Primeiro acesso");
+            Delay10KTCYx (90);
+            trocarSenhaRoot();
+        }else{
+            negarAcesso();
+        }
+        
+        
+        
     }else{
         //segundo acesso em diante
         do{

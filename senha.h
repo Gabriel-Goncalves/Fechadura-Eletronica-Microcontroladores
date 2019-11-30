@@ -25,37 +25,26 @@
 #endif
 
 union{
-    unsigned long word;
-    unsigned char vet[4];
-   
-}metade1;
-
-
-union{
-    unsigned long word;
-    unsigned char vet[4];
-   
-}metade2;
-
-union{
-    unsigned long word;
-    unsigned char vet[4];
-   
-}metade3;
-
-
-union{
-    unsigned long word;
-    unsigned char vet[4];
-   
-}metade4;
+    unsigned long word[2];
+    struct{
+        unsigned char word_0;
+        unsigned char word_1;
+        unsigned char word_2;
+        unsigned char word_3;
+        
+        unsigned char word_4;
+        unsigned char word_5;
+        unsigned char word_6;
+        unsigned char word_7;
+    };
+}palavra;
 
 
 char Digito()
  {
     
     while(1){
-        Delay1KTCYx (220);
+        Delay1KTCYx (250);
          
      PORTBbits.RB0 = 0; PORTBbits.RB1 = 1; PORTBbits.RB2 = 1; PORTBbits.RB3 = 1;
      if(PORTBbits.RB4 == 0) { return  '1';}
@@ -167,16 +156,73 @@ int confereDigito(char vet[]){
     return 1;
 }
 
-int verificaSenhaMemoria(char vet[], unsigned char a){  // de acordo com o user
-    // selecionado verifica na posicao de memoria correspondente
-    unsigned char inicio;
-    int i = 0, verifica = 0;
-    for(inicio = a; inicio < a+6; inicio++, i++){
-        if(Read_eep(inicio) == vet[i]){
+int verificaSenhaPadrao(char vet[]){
+    unsigned char i = 0x00;
+    int a = 0, verifica = 0;
+    for(i = 0x00; i <= 0x06; i++, a++){
+        if(Read_eep(i) == vet[a]){
             verifica++;
         }
     }
     if(verifica == 6){
+        return 1;
+    }
+    else{
+        return 0;
+    }
+}
+
+
+
+int verificaSenhaMemoria(char vet[], unsigned char a){  // de acordo com o user
+    // selecionado verifica na posicao de memoria correspondente
+    unsigned char inicio;
+    int i = 0, verifica = 0;
+    int compara[8];
+    
+    for(inicio = a; inicio < a+8; inicio++, i++){
+        compara[i] = (int)Read_eep(inicio);
+    }
+    
+    palavra.word_0 = compara[3];
+    palavra.word_1 = compara[2];
+    palavra.word_2 = compara[1];
+    palavra.word_3 = compara[0];
+    
+    palavra.word_4 = compara[7];
+    palavra.word_5 = compara[6];
+    palavra.word_6 = compara[5];
+    palavra.word_7 = compara[4];
+    
+    decode(palavra.word);
+    
+    if(palavra.word_3 == (long)vet[0] ){
+        verifica++;
+    }
+    if(palavra.word_2 == (long)vet[1] ){
+        verifica++;
+    }
+    if(palavra.word_1 == (long)vet[2] ){
+        verifica++;
+    }
+    if(palavra.word_0 == (long)vet[3] ){
+        verifica++;
+    }
+    if(palavra.word_7 == (long)vet[4] ){
+        verifica++;
+    }
+    if(palavra.word_6 == (long)vet[5] ){
+        verifica++;
+    }
+    if(palavra.word_4 == (long)'0' ){
+        verifica++;
+    }
+    if(palavra.word_5 == (long)'0' ){
+        verifica++;
+    }
+
+    
+    if(verifica == 8){
         return 1;
     }
     else{
@@ -191,22 +237,22 @@ int verificaSenha(char vet[], char a){
                    resultado = verificaSenhaMemoria(vet, 0x00);
                    break;
                 case '2':
-                    resultado = verificaSenhaMemoria(vet, 0x06);
+                    resultado = verificaSenhaMemoria(vet, 0x08);
                     break;
                 case '3':
-                    resultado = verificaSenhaMemoria(vet, 0x0C);
+                    resultado = verificaSenhaMemoria(vet, 0x10);
                     break;
                 case '4':
-                    resultado = verificaSenhaMemoria(vet, 0x12);
-                    break;
-                case '5':
                     resultado = verificaSenhaMemoria(vet, 0x18);
                     break;
+                case '5':
+                    resultado = verificaSenhaMemoria(vet, 0x20);
+                    break;
                 case '6':
-                    resultado = verificaSenhaMemoria(vet, 0x1E);
+                    resultado = verificaSenhaMemoria(vet, 0x28);
                     break;
                 case '7':
-                    resultado = verificaSenhaMemoria(vet, 0x24);
+                    resultado = verificaSenhaMemoria(vet, 0x30);
                     break;
             }
     return resultado;
@@ -319,7 +365,7 @@ void trocarSenhaRoot(){   // para a primeira vez que ligar o pic
         Escreve_LCD("DIGITE A NOVA");
         Posiciona_LCD(2,1);
         Escreve_LCD("SENHA DO ROOT");
-        Delay10KTCYx (50);
+        Delay10KTCYx (90);
         pedeSenha(vet);
         Inicializa_LCD();
         Posiciona_LCD(1,1);
@@ -341,33 +387,33 @@ void trocarSenhaRoot(){   // para a primeira vez que ligar o pic
     }
     // grava a senha que foi digitada pro root   
     
-    metade1.vet[0] = (long)vet[0];
-    metade1.vet[1] = (long)vet[1];
-    metade1.vet[2] = (long)vet[2];
-    metade1.vet[3] = (long)vet[3];
+    palavra.word_3 = (long)vet[0];
+    palavra.word_2 = (long)vet[1];
+    palavra.word_1 = (long)vet[2];
+    palavra.word_0 = (long)vet[3];
     
-    metade2.vet[0] = (long)vet[4];
-    metade2.vet[1] = (long)vet[5];
-    metade2.vet[2] = (long)'0';
-    metade2.vet[3] = (long)'0';
-    
-    
-    cript = metade1.word;
-    cript2 = metade2.word;
-    vetorCripto[0] = metade1.word;
-    vetorCripto[1] = metade2.word;
-    code(vetorCripto);
-    
-    metade3.word = cript;
-    metade4.word = cript2;
+    palavra.word_7 = (long)vet[4];;
+    palavra.word_6 = (long)vet[5];
+    palavra.word_5 = (long)'0';
+    palavra.word_4 = (long)'0';
     
     
-    Write_eep( 0x00, metade3.vet[0] );
-    Write_eep( 0x01, metade3.vet[1] );
-    Write_eep( 0x02, metade3.vet[2] );
-    Write_eep( 0x03, metade3.vet[3] );
-    Write_eep( 0x04, metade4.vet[0] );
-    Write_eep( 0x05, metade4.vet[1] );
+    
+    
+    
+    code(palavra.word);
+    
+    
+    
+    
+    Write_eep( 0x00, palavra.word_3 );
+    Write_eep( 0x01, palavra.word_2 );
+    Write_eep( 0x02, palavra.word_1 );
+    Write_eep( 0x03, palavra.word_0 );
+    Write_eep( 0x04, palavra.word_7 );
+    Write_eep( 0x05, palavra.word_6 );
+    Write_eep( 0x06, palavra.word_5 );
+    Write_eep( 0x07, palavra.word_4 );
     Write_eep( 0xFF, '1' );    //primeiro acesso realizado
     Write_eep( 0xFE, '1' );    
     Inicializa_LCD();
@@ -402,57 +448,62 @@ void cadastraUsuarioMemoria(unsigned char a){
     unsigned char inicio;
     int i = 0;
     char vet[];
-    long cript, cript2;
-    long vetorCripto[2];
-    long preencherMemoriaUser[6];
+    
+    long preencherMemoriaUser[8];
     Inicializa_LCD();
     Posiciona_LCD(1,1);
     Escreve_LCD("Cadastro do user");
     Posiciona_LCD(2,1);
     Escreve_C_LCD(Read_eep(0xFE));
-    Delay10KTCYx (100);
+    Delay10KTCYx (180);
     
     Inicializa_LCD();
     Posiciona_LCD(1,1);
     Escreve_LCD("Cadastro senha");
-    Delay10KTCYx (100);
+    Delay10KTCYx (180);
     
     cadastraSenha(vet);
     
+   
     
     
     
-    metade1.vet[0] = (long)vet[0];
-    metade1.vet[1] = (long)vet[1];
-    metade1.vet[2] = (long)vet[2];
-    metade1.vet[3] = (long)vet[3];
+    palavra.word_3 = (long)vet[0];
+    palavra.word_2 = (long)vet[1];
+    palavra.word_1 = (long)vet[2];
+    palavra.word_0 = (long)vet[3];
     
-    metade2.vet[0] = (long)vet[4];
-    metade2.vet[1] = (long)vet[5];
-    metade2.vet[2] = (long)'0';
-    metade2.vet[3] = (long)'0';
-    
-    cript = metade1.word;
-    cript2 = metade2.word;
-    vetorCripto[0] = cript;
-    vetorCripto[1] = cript2;
-    code(vetorCripto);
-    
-    metade3.word = cript;
-    metade4.word = cript2;
-    
-    preencherMemoriaUser[0] = metade3.vet[0];
-    preencherMemoriaUser[1] = metade3.vet[1];
-    preencherMemoriaUser[2] = metade3.vet[2];
-    preencherMemoriaUser[3] = metade3.vet[3];
-    preencherMemoriaUser[4] = metade4.vet[0];
-    preencherMemoriaUser[5] = metade4.vet[1];
+    palavra.word_7 = (long)vet[4];;
+    palavra.word_6 = (long)vet[5];
+    palavra.word_5 = (long)'0';
+    palavra.word_4 = (long)'0';
     
     
     
+   
     
-    for(inicio = a; inicio < a+6; inicio++, i++){
-        Write_eep(inicio , preencherMemoriaUser[0] );
+    
+    
+    code(palavra.word);
+    
+    
+    
+    preencherMemoriaUser[0] = palavra.word_3;
+    preencherMemoriaUser[1] = palavra.word_2;
+    preencherMemoriaUser[2] = palavra.word_1;
+    preencherMemoriaUser[3] = palavra.word_0;
+    preencherMemoriaUser[4] = palavra.word_7;
+    preencherMemoriaUser[5] = palavra.word_6;
+    preencherMemoriaUser[6] = palavra.word_5;
+    preencherMemoriaUser[7] = palavra.word_4;
+    
+    
+    
+    
+    
+    
+    for(inicio = a; inicio < a+8; inicio++, i++){
+        Write_eep(inicio , preencherMemoriaUser[i] );
     }
     
 }
@@ -460,27 +511,27 @@ void cadastraUsuarioMemoria(unsigned char a){
 void cadastrarUsuario(){
     switch (Read_eep(0xFE)){
         case '1':
-            cadastraUsuarioMemoria(0x06);
+            cadastraUsuarioMemoria(0x08);
             Write_eep( 0xFE, '2' );  // atualiza a quantidade de usuarios
             break;
         case '2':
-            cadastraUsuarioMemoria(0x0C);
+            cadastraUsuarioMemoria(0x10);
             Write_eep( 0xFE, '3' );
             break;
         case '3':
-            cadastraUsuarioMemoria(0x12);
+            cadastraUsuarioMemoria(0x18);
             Write_eep( 0xFE, '4' );
             break;
         case '4':
-            cadastraUsuarioMemoria(0x18);
+            cadastraUsuarioMemoria(0x20);
             Write_eep( 0xFE, '5' );
             break;
         case '5':
-            cadastraUsuarioMemoria(0x1E);
+            cadastraUsuarioMemoria(0x28);
             Write_eep( 0xFE, '6' );
             break;
         case '6':
-            cadastraUsuarioMemoria(0x24);
+            cadastraUsuarioMemoria(0x30);
             Write_eep( 0xFE, '7' );
             break;
         case '7':
@@ -489,7 +540,7 @@ void cadastrarUsuario(){
             Escreve_LCD("numero maximo de");
             Posiciona_LCD(2,1);
             Escreve_LCD("users atingido");
-            Delay10KTCYx (100);
+            Delay10KTCYx (180);
             break;
     }
 }

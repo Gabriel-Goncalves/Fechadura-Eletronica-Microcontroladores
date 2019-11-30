@@ -20,7 +20,10 @@ void main (void){
    while(1){
     //reiniciarPadrao();
     //reiniciarConfiguracaoInicial();//reinicia para senha root 123456(1ºacesso)
+       
      iniciar();  
+     
+     
     // implementar parte do segundo acesso
     
     /*

@@ -52,6 +52,7 @@ int verificaEEPROM(){  // verificação se é o primeiro acesso
 
 void reiniciaEEPROM(){
     unsigned char i;
+    
     Write_eep( 0x00, '1' );
     Write_eep( 0x01, '2' );
     Write_eep( 0x02, '3' );
