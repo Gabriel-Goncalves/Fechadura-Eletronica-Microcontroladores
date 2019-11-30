@@ -5,6 +5,8 @@
  * Created on 7 de Novembro de 2019, 10:34
  */
 #include"eeprom.h"
+#include"criptogafia.h"
+
 #ifndef SENHA_H
 #define	SENHA_H
 
@@ -21,6 +23,33 @@
 #ifdef	__cplusplus
 }
 #endif
+
+union{
+    unsigned long word;
+    unsigned char vet[4];
+   
+}metade1;
+
+
+union{
+    unsigned long word;
+    unsigned char vet[4];
+   
+}metade2;
+
+union{
+    unsigned long word;
+    unsigned char vet[4];
+   
+}metade3;
+
+
+union{
+    unsigned long word;
+    unsigned char vet[4];
+   
+}metade4;
+
 
 char Digito()
  {
@@ -280,6 +309,8 @@ int confirmaReiniciar(){
 void trocarSenhaRoot(){   // para a primeira vez que ligar o pic
     char vet[6], vet2[6];
     int i = 0;
+    long cript, cript2;
+    long vetorCripto[2];
     Delay10KTCYx (50);
     while(i == 0){
         Inicializa_LCD();
@@ -309,14 +340,36 @@ void trocarSenhaRoot(){   // para a primeira vez que ligar o pic
         }
     }
     // grava a senha que foi digitada pro root   
-    Write_eep( 0x00, vet[0] );
-    Write_eep( 0x01, vet[1] );
-    Write_eep( 0x02, vet[2] );
-    Write_eep( 0x03, vet[3] );
-    Write_eep( 0x04, vet[4] );
-    Write_eep( 0x05, vet[5] );
-    Write_eep( 0xFF, '1' );
-    Write_eep( 0xFE, '1' );
+    
+    metade1.vet[0] = (long)vet[0];
+    metade1.vet[1] = (long)vet[1];
+    metade1.vet[2] = (long)vet[2];
+    metade1.vet[3] = (long)vet[3];
+    
+    metade2.vet[0] = (long)vet[4];
+    metade2.vet[1] = (long)vet[5];
+    metade2.vet[2] = (long)'0';
+    metade2.vet[3] = (long)'0';
+    
+    
+    cript = metade1.word;
+    cript2 = metade2.word;
+    vetorCripto[0] = metade1.word;
+    vetorCripto[1] = metade2.word;
+    code(vetorCripto);
+    
+    metade3.word = cript;
+    metade4.word = cript2;
+    
+    
+    Write_eep( 0x00, metade3.vet[0] );
+    Write_eep( 0x01, metade3.vet[1] );
+    Write_eep( 0x02, metade3.vet[2] );
+    Write_eep( 0x03, metade3.vet[3] );
+    Write_eep( 0x04, metade4.vet[0] );
+    Write_eep( 0x05, metade4.vet[1] );
+    Write_eep( 0xFF, '1' );    //primeiro acesso realizado
+    Write_eep( 0xFE, '1' );    
     Inicializa_LCD();
     Posiciona_LCD(1,1);
     Escreve_LCD("Senha salva com");
@@ -349,6 +402,9 @@ void cadastraUsuarioMemoria(unsigned char a){
     unsigned char inicio;
     int i = 0;
     char vet[];
+    long cript, cript2;
+    long vetorCripto[2];
+    long preencherMemoriaUser[6];
     Inicializa_LCD();
     Posiciona_LCD(1,1);
     Escreve_LCD("Cadastro do user");
@@ -363,8 +419,40 @@ void cadastraUsuarioMemoria(unsigned char a){
     
     cadastraSenha(vet);
     
+    
+    
+    
+    metade1.vet[0] = (long)vet[0];
+    metade1.vet[1] = (long)vet[1];
+    metade1.vet[2] = (long)vet[2];
+    metade1.vet[3] = (long)vet[3];
+    
+    metade2.vet[0] = (long)vet[4];
+    metade2.vet[1] = (long)vet[5];
+    metade2.vet[2] = (long)'0';
+    metade2.vet[3] = (long)'0';
+    
+    cript = metade1.word;
+    cript2 = metade2.word;
+    vetorCripto[0] = cript;
+    vetorCripto[1] = cript2;
+    code(vetorCripto);
+    
+    metade3.word = cript;
+    metade4.word = cript2;
+    
+    preencherMemoriaUser[0] = metade3.vet[0];
+    preencherMemoriaUser[1] = metade3.vet[1];
+    preencherMemoriaUser[2] = metade3.vet[2];
+    preencherMemoriaUser[3] = metade3.vet[3];
+    preencherMemoriaUser[4] = metade4.vet[0];
+    preencherMemoriaUser[5] = metade4.vet[1];
+    
+    
+    
+    
     for(inicio = a; inicio < a+6; inicio++, i++){
-        Write_eep(inicio , vet[0] );
+        Write_eep(inicio , preencherMemoriaUser[0] );
     }
     
 }

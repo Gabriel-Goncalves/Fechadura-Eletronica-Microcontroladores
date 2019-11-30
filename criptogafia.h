@@ -1,3 +1,40 @@
+
+#include <stdio.h> // a libc vai definir essas funções
+
+void code(long* v)  {      
+    long k[] = {0x00112233, 0x44556677, 0x8899aabb, 0xccddeeff};
+    unsigned long y=v[0],z=v[1], sum=0,   
+     delta=0x9e3779b9, n=32 ;             
+    while (n-->0) {                      
+        sum += delta ;
+        y += (z<<4)+k[0] ^ z+sum ^ (z>>5)+k[1] ;
+        z += (y<<4)+k[2] ^ y+sum ^ (y>>5)+k[3] ;   
+    } 
+    v[0]=y ; v[1]=z ; 
+}
+
+
+void decode (long* v) {  
+    long k[] = {0x00112233, 0x44556677, 0x8899aabb, 0xccddeeff};
+    long v0=v[0], v1=v[1], sum=0xC6EF3720, i;
+    long delta=0x9e3779b9;
+    long k0=k[0], k1=k[1], k2=k[2], k3=k[3];
+    for (i=0; i<32; i++) {
+    v1 -= ((v0<<4) + k2) ^ (v0 + sum) ^ ((v0>>5) + k3);
+    v0 -= ((v1<<4) + k0) ^ (v1 + sum) ^ ((v1>>5) + k1);
+    sum -= delta;
+    }
+    v[0]=v0; v[1]=v1;
+}
+
+
+
+
+
+
+
+
+/*
 #include "stdint.h"
 #include <stdio.h> // a libc vai definir essas funções
 // encryption routine 
@@ -65,3 +102,4 @@ void criptografar() {
         printf("[ %X %X %x %d]", v[0], v[1], v, &v);
         printf("\n");
 }
+ * */
